@@ -108,9 +108,11 @@ def scrape_and_ingest_csv(url, child_dir, t):
 def convert_columns_to_numeric(df):
     # Identify columns that are numeric (ignore date columns)
     for col in df.columns:
-        if df[col].dtype == 'object':
+        if df[col].dtype == "object":
             try:
-                df[col] = pd.to_numeric(df[col].replace({'\$': '', ',': ''}, regex=True))
+                df[col] = pd.to_numeric(
+                    df[col].replace({"\$": "", ",": ""}, regex=True)
+                )
             except ValueError:
                 pass
     return df
