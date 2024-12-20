@@ -26,7 +26,7 @@ import random
 from tickers import tickers
 import csv
 from enum import Enum
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 
 
@@ -168,12 +168,13 @@ if __name__ == "__main__":
     now = datetime.now()
     current_datetime = now.strftime("%Y%m%d-%H%M%S")
     current_date = now.strftime("%Y-%m-%d")
+    five_weeks_ago = (now - timedelta(weeks=5)).strftime("%Y-%m-%d")
     child_dir = os.path.join(output_directory, current_datetime)
     os.makedirs(child_dir, exist_ok=True)
 
     # Iteraate through tickers
     for t in [ticker.upper() for ticker in tickers]:
-        url = f"https://api.nasdaq.com/api/quote/{t}/historical?assetclass=stocks&fromdate=1900-01-01&limit=9999&todate={current_date}&random={random.randint(1, 99)}"
+        url = f"https://api.nasdaq.com/api/quote/{t}/historical?assetclass=stocks&fromdate={five_weeks_ago}&limit=9999&todate={current_date}&random={random.randint(1, 99)}"
         rc = scrape_and_ingest_csv(url, child_dir, t)
         print(f"{t:<4} - {rc}")
 
