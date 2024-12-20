@@ -105,6 +105,17 @@ def scrape_and_ingest_csv(url, child_dir, t):
         return ErrorCode.ERROR_UNKNOWN
 
 
+def convert_columns_to_numeric(df):
+    # Identify columns that are numeric (ignore date columns)
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            try:
+                df[col] = pd.to_numeric(df[col].replace({'\$': '', ',': ''}, regex=True))
+            except ValueError:
+                pass
+    return df
+
+
 def combine_csvs_to_excel(child_dir, csv_files, output_excel):
     """
     Combines multiple CSV files into a single Excel file, each CSV in its own sheet.
@@ -123,6 +134,7 @@ def combine_csvs_to_excel(child_dir, csv_files, output_excel):
 
             # Try reading the CSV into a DataFrame
             df = pd.read_csv(csv_file)
+            df = convert_columns_to_numeric(df)  # Convert columns to numeric
             sheet_name = os.path.basename(csv_file).replace(".csv", "")
             sheets[sheet_name] = df
 
