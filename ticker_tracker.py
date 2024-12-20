@@ -91,7 +91,7 @@ def scrape_and_ingest_csv(url, child_dir, t):
             with open(filepath, "w", newline="") as outfile:
                 writer = csv.writer(outfile)
                 writer.writerow(list(headers.values()))
-                for row in rows:
+                for row in reversed(rows):
                     row_values = [row.get(key, "") for key in headers.keys()]
                     writer.writerow(row_values)
             return ErrorCode.SUCCESS
